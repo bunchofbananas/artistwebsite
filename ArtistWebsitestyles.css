@@ -1,0 +1,894 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img {
+    image-rendering: crisp-edges; /* Prevents blurriness */
+    image-rendering: -webkit-optimize-contrast; /* Improves contrast & sharpness */
+    image-rendering: high-quality; /* Extra sharpness where supported */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #111; /* Dark background for contrast */
+    font-family: "Courier New", monospace;
+    color: white;
+    image-rendering: pixelated; /* Helps with the retro look */
+}
+
+
+
+/* Main Layout (Sidebar + Content) */
+.main-layout {
+    display: flex;
+    flex: 1;
+}
+
+hr {
+    margin-top: 2rem; /* Adjust the value as needed */
+    margin-bottom: 3rem;;
+}
+
+h4{ font-size: larger;
+
+}
+/* Sidebar (Left 20%) */
+.sidebar {
+    width: 17%;
+    
+    background: #000000;
+    color: white;
+    padding: 1rem;
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 1.1em;
+    border-left: 15px groove #888;
+    border-top: 15px ridge #888;
+    text-transform: uppercase;
+    overflow-y: auto; /* This will change when image is clicked */
+    position: sticky; /* Ensure child elements respect absolute positioning */
+    z-index: 500;
+}
+
+.sidebar p {
+    font-size: 1rem;
+    margin-left: 4rem;
+    margin-right: 4rem;
+}
+
+.sidebar h2 {
+    font-size: 1.2rem;
+    padding-bottom: 1rem;
+    padding-top: .5rem;
+    font-weight: lighter;
+}
+
+.sidebar-text {
+    
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+/* Sidebar image styles */
+.sidebar img {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    display: block;
+    margin: 0 auto 10px auto;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease, z-index 0.3s ease, position 0.3s ease;
+    
+}
+
+/* Expand image in place without being cropped */
+.sidebar img:active {
+    transform: scale(1.7) translateX(30px); /* Make it bigger and move slightly to the right */
+    position: absolute; /* Ensures it breaks out of the sidebar */
+    z-index: 3000; /* Ensure it's on top */
+}
+
+/* Prevent Sidebar from Cropping Image */
+.sidebar:has(img:active) {
+    overflow: visible;
+}
+
+
+
+
+
+
+
+
+/* Main Content Area */
+.main-content {
+    border-top: 15px ridge #888;
+    width: 100%;
+    padding: 3rem;
+    padding-top: 6rem;
+    overflow-y: auto;
+    background: #111;
+    border-left: 15px ridge #888;
+    border-right: 15px ridge #888;
+}
+
+/* Keep existing expandable sections styling */
+details {
+    width: 80%;
+    margin-bottom: 24px;
+    border: 1px outset white;
+    padding: 10px;
+    background: #1a1a1a;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+}
+
+/* Sub-items inside an expanded section */
+details details {
+    width: calc(100% - 10px); /* Only 10px less wide than parent */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px; 
+    margin-bottom: 5px;
+}
+
+/* Dropdown arrow */
+details summary::after {
+    content: "▼";
+    position: absolute;
+    right: 10px;
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+}
+
+details[open] > summary::after {
+    transform: rotate(-180deg);
+}
+
+/* NEW: Make all sections open independently */
+details[open] summary ~ * {
+    display: block;
+}
+
+details summary ~ * {
+    display: none;
+}
+
+/* Fix for nested details: keep sub-items independent */
+details details[open] summary ~ * {
+    display: block;
+}
+
+/* Main Section Titles */
+summary {
+    font-weight: bold;
+    font-size: 1.5em; /* Main item title size */
+    cursor: pointer;
+    background: black;
+    color: white;
+    padding: 8px;
+    display: block;
+}
+
+/* Sub-item Titles */
+details details summary {
+    font-size: 1.2em; /* Make sub-item titles smaller */
+    padding: .7rem; /* Reduce padding */
+    text-align: left;
+}
+
+/* Remove hover background highlight */
+summary:hover {
+    color: limegreen;
+    text-shadow: none;
+}
+
+
+
+
+/* Pop-up effect for .content-item images */
+.content-item img {
+    cursor: pointer;
+    transition: transform 0.3s ease, z-index 0.3s ease;
+    padding-bottom: 2rem;
+}
+
+/* Scale up image in place when clicked */
+.content-item img:active {
+    transform: scale(1.6); /* Only 10% bigger */
+    z-index: 10; /* Ensure it's on top but not too high */
+    position: relative; /* Prevents it from moving far */
+}
+
+
+/* Prevent cropping in .content-item */
+.content-item:has(img:active) {
+    overflow: visible;
+}
+
+
+
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Space between sections */
+    padding-top: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Default grid layout for half-half sections */
+.content-item {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding-top: 2.5rem;
+    align-items: center;
+}
+
+/* Half-width text and images */
+.half-text, .half-image {
+    grid-column: span 1;
+}
+
+.half-text {
+    text-align: left;
+    max-width: 90%;
+    padding-left: 0.5rem;
+}
+
+.half-text video {
+    max-width: 100%; /* Fit within the text container */
+    height: auto; /* Maintain aspect ratio */
+    display: block;
+    box-sizing: border-box; /* Respect padding and borders */
+    padding-top: 4rem;
+}
+
+.full-text {
+    grid-column: span 2;
+    display: flex; /* Allows centering properly */
+    justify-content: center; /* Centers the text inside */
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+
+
+.full-image {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.full-image img {
+    width: 100%;
+    max-width: 88%;
+    height: auto;
+    max-height: 500px; /* Set a maximum height */
+    margin: auto;
+}
+
+/* Reverse order for alternating layout */
+.reverse .half-text {
+    order: 2;
+    padding-left: 1rem;
+}
+
+.reverse .half-image {
+    order: 1;
+}
+
+/* Make images always fill their container */
+img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.half-image figcaption {
+    font-size: 0.8rem; /* Adjust the font size as needed */
+    padding-top: 0; /* Reduce padding */
+    bottom: 0; /* Align the caption to the bottom of the image */
+    width: 100%; /* Make the caption span the full width of the image */
+    
+}
+
+.nobottompadding
+{
+    padding-bottom: 0.5rem !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Buttons and inputs */
+button, input, textarea {
+    font-family: "Courier New", monospace;
+    font-size: 1em;
+    padding: 5px;
+    border: 4px outset #555;
+    background: #222;
+    color: white;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+button:hover {
+    border: 4px inset #555;
+    color: limegreen;
+    text-shadow: none;
+}
+
+
+
+
+
+
+            
+            
+.typewriter-container {
+    height: 13%;
+    min-height: 13%;
+    background: black;
+    color: limegreen;
+    display: flex;
+    align-items: flex-start; /* Align content to the top */
+    justify-content: flex-start;
+    text-align: left;
+    font-size: .95rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #003300; /* Fake pixelation effect */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    overflow-x: hidden;
+    line-height: 1.5;
+    padding: 1rem;
+
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+
+    /* Subtle CRT flicker effect */
+    animation: crt-flicker 1s infinite alternate, scanline 10s linear infinite;
+}
+
+/* Subtle CRT Flicker */
+@keyframes crt-flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+/* Subtle horizontal scanline effect */
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+}
+
+/* RETRO TERMINAL CURSOR */
+.typewriter-container .txt::after {
+    content: '';
+    display: inline-block;
+    width: 0.6em;  /* Terminal block look */
+    height: 0.7em;  /* Match text height */
+    background-color: limegreen;  /* Retro green */
+    margin-left: 0.1em;
+    vertical-align: baseline;
+    animation: retro-blink 0.8s infinite;
+    opacity: 1;
+}
+
+/* BLINKING EFFECT */
+@keyframes retro-blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    50.01%, 100% {
+        opacity: 0;
+    }
+}
+
+
+            #page .section-background {
+                background: white;
+            }
+
+            #page section * {
+                color: black;
+            }
+
+            #page .content {
+                width: 100%;
+            }
+           
+
+
+
+
+/* SCROLL BAR */
+.message-box {
+    width: 16.2%; /* Adjust width as needed */
+    margin: 20px 0;
+    padding: 15px;
+    border-left: 16px groove #888;
+    border-right: 16px ridge #888;
+    border-top: 16px ridge #888;
+    background: #000000;
+    position: fixed;
+    bottom: 4%; /* Moves above footer */
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 4000;
+}
+
+/* Input field should take full width */
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-style: groove;
+    background: black;
+    color: white;
+    font-size: 0.8rem;
+}
+
+/* New flex container for the button & icon */
+.message-actions {
+    display: flex;
+    justify-content: space-between; /* Keeps button on left, icon on right */
+    align-items: center; /* Vertically aligns both elements */
+    width: 100%;
+    margin-top: 10px; /* Space between input and action row */
+}
+
+/* Button stays on the left */
+button {
+    padding: 4px 8px;
+    border: 2px solid white;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevents button from shrinking */
+}
+
+
+
+/* Admin Icon should stay right-aligned */
+#adminIcon {
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+#adminIcon:hover {
+    opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+            
+            /* Footer Styling */
+            footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: 3rem;
+                background: black;
+                color: rgb(162, 27, 27);
+                font-weight: bold;
+                overflow: hidden;
+                padding: 10px 0;
+                border-top: 15px ridge #888;
+                z-index: 5000;
+            }
+            
+           /* Scrolling text container */
+.scrolling-text-container {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Default scrolling animation */
+.scrolling-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 17s linear infinite;
+}
+
+/* ✅ Keep scrolling speed consistent even if messages increase */
+@keyframes scroll {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-130%);
+    }
+}
+
+
+/* ✅ Admin Mode: Pause scrolling & enable manual scrolling */
+.admin-active .scrolling-text {
+    animation: none !important; /* Stops scrolling animation */
+    white-space: normal;
+    display: block;
+    max-height: 120px;
+    overflow-y: auto;
+    text-align: left;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    position: fixed; /* Fix position to top */
+    top: 2px; /* Adjust as needed */
+    left: 2px; /* Adjust as needed */
+    right: 2px; /* Adjust as needed */
+}
+
+/* Show delete buttons only in admin mode */
+.admin-active .remove-btn {
+    display: inline !important;
+}
+
+/* Style for delete button */
+.remove-btn {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 10px;
+    margin-left: 5px;
+    display: none; /* Hidden by default */
+}
+
+.remove-btn:hover {
+    color: darkred;
+}
+
+
+
+
+
+
+
+/* RIGHT BAR CONTENT */
+
+    .right-aligned-images {
+        position: absolute;
+        right: 3rem; /* Move a tiny bit to the left */
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .right-image {
+        padding-right: 2rem;
+        max-width: 150px; /* Adjust the size as needed */
+        padding-bottom: 4rem;
+    }
+
+
+
+
+
+
+/* Mobile view styles */
+@media (max-width: 800px) {
+    /* Stack elements vertically */
+    body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Typewriter container */
+    .typewriter-container {
+        width: 100%;
+        min-height: 15%; /* Ensure it expands */
+        text-align: left;
+        padding: 1rem;
+        display: flex;
+        align-items: left; /* Center text */
+        justify-content: left;
+        overflow-y: auto; /* Add vertical scrollbar when overflow happens */
+    }
+
+    /* Main layout */
+    .main-layout {
+        flex-direction: column;
+        width: 100%;
+        display: flex;
+        align-items: center; /* Centers the content */
+    }
+
+    /* Sidebar (left) */
+    .sidebar {
+        width: 100%;
+        order: 3; /* Place after main content */
+        padding: 1rem;
+        border-left: none;
+        border-top: 15px ridge #888;
+    }
+
+    .sidebar-image {
+        width: 40%; /* Reduce image size */
+        max-width: 40%; /* Ensure it doesn't exceed */
+        height: auto; /* Maintain aspect ratio */
+        display: block; /* Remove extra space around */
+        margin: 0 auto; /* Center horizontally */
+    }
+
+    /* Main content */
+    .main-content {
+        width: 100%;
+        order: 2; /* Place after typewriter */
+        padding: 2rem 0 1rem 0;
+        border-left: none;
+        border-right: none;
+        border-top: 15px ridge #888;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Ensures content is centered */
+        
+    }
+details {
+        width: 100%;
+        
+    }
+    summary {
+        display: block;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        white-space: normal;
+        overflow: hidden;
+    }
+
+
+    details details {
+        width: calc(100% - 5px); 
+    }
+
+
+
+    .content-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .content-item img {
+        width: 100%; /* Images take up 45% */
+        height: auto;
+        display: block; /* Ensure the image is treated as a block element */
+        margin: 0; /* Remove any default margin */
+    }
+    
+    .content-item p {
+        width: 100%;
+        text-align: center;
+        line-height: 1;
+    }
+    
+    
+   
+
+
+
+   
+   
+   
+   
+   
+   
+   
+    /* Right sidebar */
+    .right-aligned-images {
+        width: 70%;
+        order: 4; /* Place after left sidebar */
+        padding: 1rem;
+        position: static;
+        transform: none;
+        align-items: center;
+    }
+
+    .right-image {
+        max-width: 50%; /* Makes sidebar image smaller */
+        padding-bottom: 1rem;
+    }
+
+
+    /* Footer */
+    footer {
+        position: static;
+        width: 100%;
+        order: 6; /* Keep footer at the bottom */
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+        border-top: 15px ridge #888;
+        font-size: 1.2rem;
+    }
+
+    /* Message Box */
+    .message-box {
+        width: 100%; /* Adjust width as needed */
+        margin:0;
+        padding: 15px;
+        border-top: 2px solid rgb(252, 252, 252);
+        background: #000000; 
+        order: 5; /* Ensures message box is above the footer */
+        position: static; /* Prevent floating */
+        font-size: larger;
+    }
+}
+
+
+
+
+
+
+/* SLIDESHOW */
+.slideshow-container {
+    position: relative;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+}
+
+/* IMAGE */
+.slideshow-container img {
+    width: 100%;
+    max-width: 92%;
+    max-height: 450px;
+    object-fit: cover;
+    transition: opacity 1s ease-in-out;
+}
+
+/* FULL-HEIGHT, WIDER CLICKABLE BUTTONS */
+.slideshow-container button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10%; /* Makes the entire side clickable */
+    background: transparent; /* No background unless hovered */
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 10; /* Keeps the buttons above everything */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+/* OPTIONAL: Hover effect for better visibility */
+.slideshow-container button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* MOVE ICONS FURTHER OUTSIDE IMAGE */
+.prev { left: -35px; justify-content: flex-start; }
+.next { right: -35px; justify-content: flex-end; }
+
+
+
+
+
+
+
+
+/* GALLERY GRID - 4 images per row */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 15px;
+    padding-top: 30px;
+}
+
+/* IMAGE CONTAINER - Ensure No Overflow Clipping */
+.gallery-item {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible; /* ✅ This allows the image to expand outside */
+}
+
+/* IMAGE DEFAULT STYLING */
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+/* HOVER POP-OUT EFFECT (Moves Up & Left and Appears on Top) */
+.gallery-item:hover img {
+    position: absolute;
+    top: -20px; /* Moves up */
+    left: -20px; /* Moves left */
+    transform: scale(2.55); /* Enlarges */
+    z-index: 100; /* ✅ Ensures image appears above everything */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 8px; /* Optional for smooth edges */
+    background: white; /* Avoids weird transparency issues */
+}
+
+
+
+
+
+
+
+.carousel {
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    margin: auto;
+    overflow: hidden;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.slide img {
+    width: 100%;
+    display: block;
+}
+
+.carousel button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
